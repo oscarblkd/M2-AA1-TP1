@@ -22,7 +22,7 @@ public class PersonneDTO {
     private String email;
 
     private List<VoitureDTO> voituresPossedees;
-    private List <VoitureDTO> voituresLouees;
+    private List<VoitureDTO> voituresLouees;
 
     /**
      * Construit un nouveau PersonneDTO à partir d'une entité Personne donnée.

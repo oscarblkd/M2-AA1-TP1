@@ -48,8 +48,11 @@ public class VoitureController {
     @GetMapping("proprietaire/{nom}")
     public List<VoitureDTO> getVoitures(
             @Parameter(description = "Le nom du propriétaire dont les voitures doivent être récupérées", required = true)
-            @PathVariable String nom) {
+              @PathVariable String nom) {
         log.info("Controller - recuperation de voiture pour {}", nom);
         return service.recupererVoituresProprietaire(nom);
     }
+    /**
+     * Récupère
+     */
 }
