@@ -67,6 +67,7 @@ public class VoitureService {
      */
     public List<VoitureDTO> filtrageVoitures(List<TypeVoiture> typesVoiture, double prix){
         List<Voiture> listeRetour = new ArrayList<>();
+        if(typesVoiture == null) typesVoiture = new ArrayList<>();
         if(!typesVoiture.isEmpty()){
             listeRetour.addAll(voitureRepository.findVoituresByTypeIn(typesVoiture));
         }

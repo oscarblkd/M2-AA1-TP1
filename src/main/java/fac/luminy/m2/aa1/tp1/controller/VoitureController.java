@@ -71,8 +71,6 @@ public class VoitureController {
             @Parameter(description = "Prix voulu par le locataire")
             @RequestParam(required = false) Double price
     ) {
-        if(types == null) types = new ArrayList<>();
-        if(price == null) price = -1.0;
         return service.filtrageVoitures(types, price);
     }
 }
