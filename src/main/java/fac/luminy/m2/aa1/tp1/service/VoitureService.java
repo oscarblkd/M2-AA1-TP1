@@ -1,6 +1,7 @@
 package fac.luminy.m2.aa1.tp1.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fac.luminy.m2.aa1.tp1.model.TypeVoiture;
 import fac.luminy.m2.aa1.tp1.model.dto.VoitureDTO;
 import fac.luminy.m2.aa1.tp1.model.entity.Voiture;
 import fac.luminy.m2.aa1.tp1.repository.VoitureRepository;
@@ -23,11 +24,26 @@ public class VoitureService {
     /**
      * Récupère la liste des voitures pour un propriétaire donné.
      *
+     * @param voitures Listes des voitures
+     * @return une liste de {@link VoitureDTO} représentant la conversion des voitures en VoitureDTO
+     */
+    private List<VoitureDTO> convertVoitureListToVoitureDTO(List<Voiture> voitures) {
+        List<VoitureDTO> dtos = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        for (Voiture voiture : voitures) {
+            dtos.add(mapper.convertValue(voiture, VoitureDTO.class));
+        }
+        return dtos;
+    }
+
+    /**
+     * Récupère la liste des voitures pour un propriétaire donné.
+     *
      * @param nomProprietaire le nom du propriétaire dont les voitures doivent être récupérées
      * @return une liste de {@link VoitureDTO} représentant les voitures du propriétaire
      */
 
-    public List <VoitureDTO> recupererVoituresProprietaire(String nomProprietaire){
+    public List<VoitureDTO> recupererVoituresProprietaire(String nomProprietaire){
         log.info("Demande de recuperation des voitures pour le proprietaire avec le nom {}", nomProprietaire);
         List<VoitureDTO> listeRetour = new ArrayList<>();
         //Faire l'appel au repository pour recuperer la voiture a partir du nom du proprietaire
@@ -40,5 +56,27 @@ public class VoitureService {
         // Retourner la liste des voitures
         log.info("{} voitures pour le proprietaire avec le nom {}",listeRetour.size(),nomProprietaire);
         return listeRetour;
+    }
+
+    /**
+     * Récupère une liste de voiture pour un locataire en fonction de ses préférences.
+     *
+     * @param typesVoiture Liste de {@link TypeVoiture} correspondant aux préférences du locataire
+     * @param prix Prix de {@link Integer} correspondant au prix voulu du locataire
+     * @return une liste de {@link VoitureDTO}
+     */
+    public List<VoitureDTO> filtrageVoitures(List<TypeVoiture> typesVoiture, int prix){
+        List<Voiture> listeRetour = new ArrayList<>();
+        if(!typesVoiture.isEmpty()){
+            listeRetour.addAll(voitureRepository.findVoituresByTypeIn(typesVoiture));
+        }
+        if(prix > 0){
+            voitureRepository.findByPricePlusMinusTenPercent(prix).forEach(voiture -> {
+                if(!listeRetour.contains(voiture)){
+                    listeRetour.add(voiture);
+                }
+            });
+        }
+        return convertVoitureListToVoitureDTO(listeRetour);
     }
 }

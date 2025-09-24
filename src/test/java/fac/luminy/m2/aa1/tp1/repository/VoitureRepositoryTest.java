@@ -33,7 +33,7 @@ public class VoitureRepositoryTest {
         voitureRepository.save(voiture);
 
         // Act
-        List<Voiture> result = voitureRepository.findByProprietaireNom("Doe");
+        List<Voiture> result = voitureRepository.findByProprietaireNom("Greenwood");
 
         // Assert
         assertNotNull(result);
