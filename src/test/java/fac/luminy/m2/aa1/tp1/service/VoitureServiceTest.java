@@ -113,7 +113,7 @@ public class VoitureServiceTest {
                 .thenReturn(List.of(voiture1));
 
         // Act
-        List<VoitureDTO> result = voitureService.filtrageVoitures(types, 0);
+        List<VoitureDTO> result = voitureService.filtrageVoitures(types, -1);
 
         // Assert
         assertNotNull(result);

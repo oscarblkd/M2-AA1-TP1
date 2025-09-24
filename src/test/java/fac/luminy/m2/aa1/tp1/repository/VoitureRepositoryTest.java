@@ -1,5 +1,6 @@
 package fac.luminy.m2.aa1.tp1.repository;
 
+import fac.luminy.m2.aa1.tp1.model.TypeVoiture;
 import fac.luminy.m2.aa1.tp1.model.entity.Personne;
 import fac.luminy.m2.aa1.tp1.model.entity.Voiture;
 import lombok.extern.slf4j.Slf4j;
@@ -87,6 +88,16 @@ public class VoitureRepositoryTest {
         assertEquals(v2.getPrix(), result.get(0).getPrix());
         assertEquals(v3.getPrix(), result.get(1).getPrix());
         assertEquals(v4.getPrix(), result.get(2).getPrix());
+    }
+
+    @Test
+    public void testFindVoituresByTypeIn(){
+
+        List<Voiture> result = voitureRepository.findVoituresByTypeIn(List.of(TypeVoiture.COMPACTE));
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(102, result.get(0).getId());
+        assertEquals(105, result.get(1).getId());
 
     }
 }
