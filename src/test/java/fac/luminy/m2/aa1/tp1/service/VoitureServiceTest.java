@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -90,6 +91,34 @@ public class VoitureServiceTest {
 
         // Assert
         assertEquals(0, result.size());
+    }
+
+    @Test
+    public void testFiltrageVoituresTypes(){
+        // Arrange
+        Voiture voiture1 = new Voiture();
+        voiture1.setId(1L);
+        voiture1.setModele("Model S");
+        voiture1.setMarque("Tesla");
+        voiture1.setAnnee(2020);
+        voiture1.setType(TypeVoiture.SUV);
+        voiture1.setChevauxFiscaux(10);
+        voiture1.setPrix(80000.0);
+        voiture1.setConsommation(15.0);
+        voiture1.setCouleur("Red");
+
+        List<TypeVoiture> types = List.of(TypeVoiture.SUV);
+
+        when(voitureRepository.findVoituresByTypeIn(types))
+                .thenReturn(List.of(voiture1));
+
+        // Act
+        List<VoitureDTO> result = voitureService.filtrageVoitures(types, 0);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(voiture1.getId(), result.get(0).getId());
     }
 
 

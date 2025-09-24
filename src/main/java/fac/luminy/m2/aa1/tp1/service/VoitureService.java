@@ -29,9 +29,8 @@ public class VoitureService {
      */
     private List<VoitureDTO> convertVoitureListToVoitureDTO(List<Voiture> voitures) {
         List<VoitureDTO> dtos = new ArrayList<>();
-        ObjectMapper mapper = new ObjectMapper();
         for (Voiture voiture : voitures) {
-            dtos.add(mapper.convertValue(voiture, VoitureDTO.class));
+            dtos.add(new VoitureDTO(voiture));
         }
         return dtos;
     }
@@ -63,10 +62,10 @@ public class VoitureService {
      * Récupère une liste de voiture pour un locataire en fonction de ses préférences.
      *
      * @param typesVoiture Liste de {@link TypeVoiture} correspondant aux préférences du locataire
-     * @param prix Prix de {@link Integer} correspondant au prix voulu du locataire
+     * @param prix Prix de {@link Double} correspondant au prix voulu du locataire
      * @return une liste de {@link VoitureDTO}
      */
-    public List<VoitureDTO> filtrageVoitures(List<TypeVoiture> typesVoiture, int prix){
+    public List<VoitureDTO> filtrageVoitures(List<TypeVoiture> typesVoiture, double prix){
         List<Voiture> listeRetour = new ArrayList<>();
         if(!typesVoiture.isEmpty()){
             listeRetour.addAll(voitureRepository.findVoituresByTypeIn(typesVoiture));
@@ -77,6 +76,9 @@ public class VoitureService {
                     listeRetour.add(voiture);
                 }
             });
+        }
+        if(listeRetour.isEmpty()){
+            listeRetour.addAll(voitureRepository.findAll());
         }
         return convertVoitureListToVoitureDTO(listeRetour);
     }
