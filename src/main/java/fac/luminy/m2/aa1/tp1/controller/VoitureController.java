@@ -1,5 +1,6 @@
 package fac.luminy.m2.aa1.tp1.controller;
 
+import fac.luminy.m2.aa1.tp1.model.TypeVoiture;
 import fac.luminy.m2.aa1.tp1.model.dto.VoitureDTO;
 import fac.luminy.m2.aa1.tp1.service.VoitureService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,11 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -53,6 +52,27 @@ public class VoitureController {
         return service.recupererVoituresProprietaire(nom);
     }
     /**
-     * Récupère
+     * Recherche les voitures selon les préférences du locataire
+     *
+     * @param types la liste de type de voiture voulu par le locataire
+     * @param price le prix voulu de la voiture par le locataire
+     * @return une liste de {@link VoitureDTO} représentant les voitures trouvé selon les filtres
+     *      Si les deux filtres sont vides, alors nous retournons toutes les voitures disponibles
      */
+    @Operation(summary = "Recherche une liste de voitures conformes aux filtres du locataire")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Liste des voitures filtrées récupérée avec succès"),
+            @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
+    })
+    @GetMapping()
+    public List<VoitureDTO> getVoituresWithFilter(
+            @Parameter(description = "Liste des types voulu par le locataire")
+            @RequestParam(required = false) List<TypeVoiture> types,
+            @Parameter(description = "Prix voulu par le locataire")
+            @RequestParam(required = false) Double price
+    ) {
+        if(types == null) types = new ArrayList<>();
+        if(price == null) price = -1.0;
+        return service.filtrageVoitures(types, price);
+    }
 }

@@ -94,7 +94,7 @@ public class VoitureServiceTest {
     }
 
     @Test
-    public void testFiltrageVoituresTypes(){
+    public void testFiltrageVoitures_TypesNoPrice(){
         // Arrange
         Voiture voiture1 = new Voiture();
         voiture1.setId(1L);
@@ -114,6 +114,104 @@ public class VoitureServiceTest {
 
         // Act
         List<VoitureDTO> result = voitureService.filtrageVoitures(types, -1);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(voiture1.getId(), result.get(0).getId());
+    }
+
+    @Test
+    public void testFiltrageVoitures_NoTypesPrice(){
+        // Arrange
+        Voiture voiture1 = new Voiture();
+        voiture1.setId(1L);
+        voiture1.setModele("Model S");
+        voiture1.setMarque("Tesla");
+        voiture1.setAnnee(2020);
+        voiture1.setType(TypeVoiture.SUV);
+        voiture1.setChevauxFiscaux(10);
+        voiture1.setPrix(80000.0);
+        voiture1.setConsommation(15.0);
+        voiture1.setCouleur("Red");
+
+        double price = 80000.0;
+
+        when(voitureRepository.findByPricePlusMinusTenPercent(price))
+                .thenReturn(List.of(voiture1));
+
+        // Act
+        List<VoitureDTO> result = voitureService.filtrageVoitures(List.of(), price);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(voiture1.getId(), result.get(0).getId());
+    }
+
+    @Test
+    public void testFiltrageVoitures_NoTypesNoPrice(){
+        // Arrange
+        Voiture voiture1 = new Voiture();
+        voiture1.setId(1L);
+        voiture1.setModele("Model S");
+        voiture1.setMarque("Tesla");
+        voiture1.setAnnee(2020);
+        voiture1.setType(TypeVoiture.SUV);
+        voiture1.setChevauxFiscaux(10);
+        voiture1.setPrix(80000.0);
+        voiture1.setConsommation(15.0);
+        voiture1.setCouleur("Red");
+
+        Voiture voiture2 = new Voiture();
+        voiture2.setId(2L);
+        voiture2.setModele("Model 3");
+        voiture2.setMarque("Tesla");
+        voiture2.setAnnee(2021);
+        voiture2.setType(TypeVoiture.BERLINE);
+        voiture2.setChevauxFiscaux(8);
+        voiture2.setPrix(50000.0);
+        voiture2.setConsommation(10.0);
+        voiture2.setCouleur("Blue");
+
+        when(voitureRepository.findAll()).thenReturn(List.of(voiture1, voiture2));
+
+        // Act
+        List<VoitureDTO> result = voitureService.filtrageVoitures(List.of(), -1);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(voiture1.getId(), result.get(0).getId());
+        assertEquals(voiture2.getId(), result.get(1).getId());
+    }
+
+    @Test
+    public void testFiltrageVoitures_TypesPrice(){
+        // Arrange
+        Voiture voiture1 = new Voiture();
+        voiture1.setId(1L);
+        voiture1.setModele("Model S");
+        voiture1.setMarque("Tesla");
+        voiture1.setAnnee(2020);
+        voiture1.setType(TypeVoiture.SUV);
+        voiture1.setChevauxFiscaux(10);
+        voiture1.setPrix(80000.0);
+        voiture1.setConsommation(15.0);
+        voiture1.setCouleur("Red");
+
+        List<TypeVoiture> types = List.of(TypeVoiture.SUV);
+
+        when(voitureRepository.findVoituresByTypeIn(types))
+                .thenReturn(List.of(voiture1));
+
+        double price = 80000.0;
+
+        when(voitureRepository.findByPricePlusMinusTenPercent(price))
+                .thenReturn(List.of(voiture1));
+
+        // Act
+        List<VoitureDTO> result = voitureService.filtrageVoitures(types, price);
 
         // Assert
         assertNotNull(result);
