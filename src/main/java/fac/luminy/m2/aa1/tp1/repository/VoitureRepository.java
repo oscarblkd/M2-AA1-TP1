@@ -12,7 +12,7 @@ public interface VoitureRepository extends JpaRepository<Voiture, Long> {
 
     List<Voiture> findByProprietaireNom(@Param("nom") String nom);
 
-    @Query("SELECT v from VOITURE v where ?1 < v.prix * 1.10 or ?1 > v.prix * 0.90")
+    @Query("SELECT v from VOITURE v where v.prix between :prix * 0.9 and :prix * 1.1")
     List<Voiture> findByPricePlusMinusTenPercent(@Param("prix") double prix);
 
     List<Voiture> findVoituresByTypeIn(List<TypeVoiture> typesVoiture);
