@@ -28,6 +28,16 @@ public class VoitureDTO {
 
 
     public VoitureDTO(Voiture voiture) {
-
+        if(voiture != null) {
+            this.id = voiture.getId();
+            this.modele = voiture.getModele();
+            this.marque = voiture.getMarque();
+            this.annee = voiture.getAnnee();
+            this.type = voiture.getType();
+            this.chevauxFiscaux = voiture.getChevauxFiscaux();
+            this.prix = voiture.getPrix();
+            this.consommation = voiture.getConsommation();
+            this.couleur = voiture.getCouleur();
+        }
     }
 }

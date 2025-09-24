@@ -49,10 +49,11 @@ public class VoitureService {
         //Faire l'appel au repository pour recuperer la voiture a partir du nom du proprietaire
         List<Voiture> voituresProprio = voitureRepository.findByProprietaireNom(nomProprietaire);
         // Convertir les voitures en voituresDTO
-        ObjectMapper objectMapper = new ObjectMapper();
-        voituresProprio.forEach(voiture -> {
-            listeRetour.add(objectMapper.convertValue(voiture, VoitureDTO.class));
-        });
+        if(voituresProprio != null){
+            voituresProprio.forEach(voiture -> {
+                listeRetour.add(new VoitureDTO(voiture));
+            });
+        }
         // Retourner la liste des voitures
         log.info("{} voitures pour le proprietaire avec le nom {}",listeRetour.size(),nomProprietaire);
         return listeRetour;

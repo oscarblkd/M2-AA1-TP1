@@ -21,6 +21,9 @@ public class VoitureRepositoryTest {
     @Autowired
     private VoitureRepository voitureRepository;
 
+    @Autowired
+    private PersonneRepository personneRepository;
+
     @Test
     public void testFindByProprietaireNom() {
         // Arrange
@@ -28,6 +31,8 @@ public class VoitureRepositoryTest {
 
         Personne proprietaire = new Personne();
         proprietaire.setNom("Greenwood");
+        personneRepository.save(proprietaire);
+
         voiture.setProprietaire(proprietaire);
         voiture.setMarque("Ferrari");
         voitureRepository.save(voiture);
