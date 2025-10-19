@@ -22,17 +22,6 @@ public class VoitureService {
     private VoitureRepository voitureRepository;
 
     /**
-
-     */
-    private List<VoitureDTO> convertVoitureListToVoitureDTO(List<Voiture> voitures) {
-        List<VoitureDTO> dtos = new ArrayList<>();
-        for (Voiture voiture : voitures) {
-            dtos.add(new VoitureDTO(voiture));
-        }
-        return dtos;
-    }
-
-    /**
      * Récupère la liste des voitures pour un propriétaire donné.
      *
      * @param nomProprietaire le nom du propriétaire dont les voitures doivent être récupérées
