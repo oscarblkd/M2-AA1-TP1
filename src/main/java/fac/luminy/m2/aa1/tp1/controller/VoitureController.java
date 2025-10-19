@@ -71,6 +71,6 @@ public class VoitureController {
             @Parameter(description = "Prix voulu par le locataire")
             @RequestParam(required = false) Double price
     ) {
-        return service.filtrageVoitures(types, price);
+        return service.filtrageVoitures(price, types);
     }
 }
