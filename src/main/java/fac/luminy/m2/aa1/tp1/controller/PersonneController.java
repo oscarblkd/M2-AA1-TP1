@@ -34,7 +34,7 @@ public class PersonneController {
       * @param nom le nom du propriétaire dont le chiffre d'affaires doit être récupérée
       * @return le chiffre d'affaires de la personne
       */
-     @Operation(summary = "Récupère la liste des voitures pour un propriétaire donné",
+     @Operation(summary = "Récupère le chiffre d'affaire pour un propriétaire",
              description = "Retourne le chiffre d'affaire pour le propriétaire spécifié par son nom")
      @ApiResponses(value = {
              @ApiResponse(responseCode = "200", description = "Chiffre d'affaires récupérée avec succès"),
@@ -43,7 +43,7 @@ public class PersonneController {
      })
      @GetMapping("revenue/{nom}")
      public ResponseEntity<Float> getChiffreDaffaire(
-             @Parameter(description = "Le nom du propriétaire dont les voitures doivent être récupérées", required = true)
+             @Parameter(description = "Le nom du propriétaire dont ont veux récupérer les revenus", required = true)
              @PathVariable String nom) {
           float result = service.chiffreDaffaire(nom);
           if(result == -1){
@@ -58,8 +58,8 @@ public class PersonneController {
       * @param nom le nom du propriétaire dont le taux annuel doit être récupérée
       * @return le taux annuel de la personne
       */
-     @Operation(summary = "Récupère la liste des voitures pour un propriétaire donné",
-             description = "Retourne le taux annuel pour le propriétaire spécifié par son nom")
+     @Operation(summary = "Récupère le taux annuel de location des voitures d'une personne",
+             description = "Retourne le taux annuel de location pour le propriétaire spécifié par son nom")
      @ApiResponses(value = {
              @ApiResponse(responseCode = "200", description = "Taux annuel récupérée avec succès"),
              @ApiResponse(responseCode = "404", description = "Propriétaire non trouvé"),
@@ -67,7 +67,7 @@ public class PersonneController {
      })
      @GetMapping("taux/{nom}")
      public ResponseEntity<Double> getTauxLocationAnnuel(
-             @Parameter(description = "Le nom du propriétaire dont les voitures doivent être récupérées", required = true)
+             @Parameter(description = "Le nom du propriétaire dont le taux veut être calculé", required = true)
              @PathVariable String nom) {
           double result = service.tauxLocationAnnuel(nom);
           if(result == -1){
