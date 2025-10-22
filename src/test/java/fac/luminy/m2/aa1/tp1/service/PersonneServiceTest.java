@@ -120,16 +120,84 @@ public class PersonneServiceTest {
 
     @Test
     public void tauxLocationAnnuelNotSameYearBeginTest(){
+        Voiture voiture1 = new Voiture();
+        voiture1.setId(1L);
+        voiture1.setModele("Model S");
+        voiture1.setMarque("Tesla");
+        voiture1.setAnnee(2020);
+        voiture1.setType(TypeVoiture.SUV);
+        voiture1.setChevauxFiscaux(10);
+        voiture1.setPrix(100);
+        voiture1.setConsommation(15.0);
+        voiture1.setCouleur("Red");
+        voiture1.setDureeLocations(List.of(new DureeLocation(
+                LocalDate.of(2024, 12, 1),
+                LocalDate.of(2025, 12, 31))));
+
+
+        Personne personne = new Personne();
+        personne.setNom("Dupont");
+        personne.setVoituresPossedees(List.of(voiture1));
+        when(personneRepository.findByNom("Dupont")).
+                thenReturn(personne);
+
+        double taux =  personneService.tauxLocationAnnuel("Dupont", 2025);
+        assertEquals(100.0, taux);
 
     }
 
     @Test
     public void tauxLocationAnnuelNotSameEndYearTest(){
 
+        Voiture voiture1 = new Voiture();
+        voiture1.setId(1L);
+        voiture1.setModele("Model S");
+        voiture1.setMarque("Tesla");
+        voiture1.setAnnee(2020);
+        voiture1.setType(TypeVoiture.SUV);
+        voiture1.setChevauxFiscaux(10);
+        voiture1.setPrix(100);
+        voiture1.setConsommation(15.0);
+        voiture1.setCouleur("Red");
+        voiture1.setDureeLocations(List.of(new DureeLocation(
+                LocalDate.of(2025, 1, 1),
+                LocalDate.of(2026, 1, 31))));
+
+
+        Personne personne = new Personne();
+        personne.setNom("Dupont");
+        personne.setVoituresPossedees(List.of(voiture1));
+        when(personneRepository.findByNom("Dupont")).
+                thenReturn(personne);
+
+        double taux =  personneService.tauxLocationAnnuel("Dupont", 2025);
+        assertEquals(100.0, taux);
+
     }
 
     @Test
     public void tauxLocationAnnuelInvalidProprietaireTest(){
+
+        Voiture voiture1 = new Voiture();
+        voiture1.setId(1L);
+        voiture1.setModele("Model S");
+        voiture1.setMarque("Tesla");
+        voiture1.setAnnee(2020);
+        voiture1.setType(TypeVoiture.SUV);
+        voiture1.setChevauxFiscaux(10);
+        voiture1.setPrix(100);
+        voiture1.setConsommation(15.0);
+        voiture1.setCouleur("Red");
+        voiture1.setDureeLocations(List.of(new DureeLocation(
+                LocalDate.of(2024, 12, 1),
+                LocalDate.of(2025, 12, 31))));
+
+
+        when(personneRepository.findByNom("Dupont")).
+                thenReturn(null);
+
+        double taux =  personneService.tauxLocationAnnuel("Dupont", 2025);
+        assertEquals(-1, taux);
 
     }
 
