@@ -50,13 +50,16 @@ public class PersonneService {
           List<Voiture> voitures = proprietaire.getVoituresPossedees();
           float tauxLocationAnnuel = 0f;
           for (Voiture voiture : voitures) {
-               tauxLocationAnnuel += tauxParVoiture(voiture, annee);
+               tauxLocationAnnuel += tauxParVoiture(nomProprietaire, voiture, annee);
           }
 
           return  tauxLocationAnnuel / proprietaire.getVoituresPossedees().size();
      }
 
-     private float tauxParVoiture(Voiture voiture, int annee){
+     public float tauxParVoiture(String nomProprietaire, Voiture voiture, int annee){
+          if(!personneRepository.findByNom(nomProprietaire).getVoituresPossedees().contains(voiture)){
+               return -1;
+          }
           float jours = 0f;
           for(DureeLocation dureeLocation : voiture.getDureeLocations()) {
                if(dureeLocation.dateDebut().getYear() == annee && dureeLocation.dateFin().getYear() == annee){
@@ -72,6 +75,15 @@ public class PersonneService {
           return Year.isLeap(annee) ?
                   jours * 100f / 366:
                   jours * 100f / 365;
+     }
+
+     public Voiture findVoiture(String nomProprietaire, long id){
+          for(Voiture v : personneRepository.findByNom(nomProprietaire).getVoituresPossedees()){
+               if(v.getId() == id){
+                    return v;
+               }
+          }
+          return null;
      }
 
      private float calculRevenueVoiture(Voiture voiture) {

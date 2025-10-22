@@ -79,4 +79,33 @@ public class PersonneController {
           return ResponseEntity.ok(result);
      }
 
+     /**
+      * Récupère le taux annuel d'une personne.
+      *
+      * @param nom le nom du propriétaire dont le taux annuel doit être récupérée
+      * @return le taux annuel de la personne
+      */
+     @Operation(summary = "Récupère le taux annuel de location des voitures d'une personne",
+             description = "Retourne le taux annuel de location pour le propriétaire spécifié par son nom")
+     @ApiResponses(value = {
+             @ApiResponse(responseCode = "200", description = "Taux annuel récupérée avec succès"),
+             @ApiResponse(responseCode = "404", description = "Propriétaire non trouvé"),
+             @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
+     })
+     @GetMapping("taux/{annee}/{nom}/{id}")
+     public ResponseEntity<Double> getTauxLocationAnnuelParVoiture(
+             @Parameter(description = "L'année du taux voulu", required = true)
+             @PathVariable int annee,
+             @Parameter(description = "Le nom du propriétaire dont le taux veut être calculé", required = true)
+             @PathVariable String nom,
+             @Parameter(description = "L'id de la voiture", required = true)
+             @PathVariable Long id)
+     {
+          double result = service.tauxParVoiture(nom, service.findVoiture(nom, id), annee);
+          if(result == -1){
+               return ResponseEntity.notFound().build();
+          }
+          return ResponseEntity.ok(result);
+     }
+
 }
