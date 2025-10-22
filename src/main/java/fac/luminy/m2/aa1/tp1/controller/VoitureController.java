@@ -23,7 +23,7 @@ import java.util.List;
  * @author matmiche
  */
 @RestController
-@RequestMapping("voitures")
+@RequestMapping("voitures/")
 @Slf4j
 @AllArgsConstructor
 public class VoitureController {
