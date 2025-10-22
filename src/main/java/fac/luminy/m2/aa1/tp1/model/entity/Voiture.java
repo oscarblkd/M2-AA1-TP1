@@ -33,6 +33,7 @@ public class Voiture {
     @JoinColumn(name = "locataire_id")
     private Personne locataire;
 
+    @ElementCollection
     private List<DureeLocation> dureeLocations;
 
 }
