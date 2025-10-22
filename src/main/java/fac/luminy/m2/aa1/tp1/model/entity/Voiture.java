@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Entity(name = "VOITURE")
@@ -30,5 +32,7 @@ public class Voiture {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "locataire_id")
     private Personne locataire;
+
+    private List<DureeLocation> dureeLocations;
 
 }

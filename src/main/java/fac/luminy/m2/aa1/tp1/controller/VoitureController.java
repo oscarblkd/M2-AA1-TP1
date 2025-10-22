@@ -30,7 +30,6 @@ public class VoitureController {
 
     private VoitureService service;
 
-
     /**
      * Récupère la liste des voitures pour un propriétaire donné.
      *

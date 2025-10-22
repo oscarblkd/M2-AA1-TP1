@@ -27,7 +27,6 @@ public class VoitureService {
      * @param nomProprietaire le nom du propriétaire dont les voitures doivent être récupérées
      * @return une liste de {@link VoitureDTO} représentant les voitures du propriétaire
      */
-
     public List<VoitureDTO> recupererVoituresProprietaire(String nomProprietaire){
         log.info("Demande de recuperation des voitures pour le proprietaire avec le nom {}", nomProprietaire);
         List<VoitureDTO> listeRetour = new ArrayList<>();
