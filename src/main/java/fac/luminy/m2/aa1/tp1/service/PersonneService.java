@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Year;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Component
@@ -40,33 +42,36 @@ public class PersonneService {
           return chiffreDaffaire;
      }
 
-     public double tauxLocationAnnuel(String nomProprietaire, int annee){
+     public float tauxLocationAnnuel(String nomProprietaire, int annee){
           Personne proprietaire = personneRepository.findByNom(nomProprietaire);
           if(proprietaire == null){
                return -1;
           }
           List<Voiture> voitures = proprietaire.getVoituresPossedees();
-          int jours = 0;
+          float jours = 1f;
           for (Voiture voiture : voitures) {
                for(DureeLocation dureeLocation : voiture.getDureeLocations()) {
                    if(dureeLocation.dateDebut().getYear() == annee && dureeLocation.dateFin().getYear() == annee){
-                       jours += (int) Duration.between(dureeLocation.dateDebut(), dureeLocation.dateFin()).toDays();
+                       jours += ChronoUnit.DAYS.between(dureeLocation.dateDebut(), dureeLocation.dateFin());
                    }
                    else if (dureeLocation.dateDebut().getYear() == annee && dureeLocation.dateFin().getYear() != annee) {
-                       jours += (int) Duration.between(dureeLocation.dateDebut(), LocalDate.of(annee, 12, 31)).toDays();
+                       jours += ChronoUnit.DAYS.between(dureeLocation.dateDebut(), LocalDate.of(annee, 12, 31));
                    }
                    else if (dureeLocation.dateDebut().getYear() != annee && dureeLocation.dateFin().getYear() == annee) {
-                       jours += (int) Duration.between(LocalDate.of(annee, 1, 1), dureeLocation.dateFin()).toDays();
+                       jours += ChronoUnit.DAYS.between(LocalDate.of(annee, 1, 1), dureeLocation.dateFin());
                    }
                }
           }
-          return (double) ((jours / proprietaire.getVoituresPossedees().size()) * 100 / 365);
+
+          return  Year.isLeap(annee) ?
+                   ((jours / proprietaire.getVoituresPossedees().size()) * 100f / 366):
+                   ((jours / proprietaire.getVoituresPossedees().size()) * 100f / 365);
      }
 
      private float calculRevenueVoiture(Voiture voiture) {
           float result = 0;
           for(DureeLocation dureeLocation : voiture.getDureeLocations()) {
-               result += (float) (voiture.getPrix() * Duration.between(dureeLocation.dateDebut(), dureeLocation.dateFin()).toDays());
+               result += (float) (voiture.getPrix() * ChronoUnit.DAYS.between(dureeLocation.dateDebut(), dureeLocation.dateFin()));
           }
           return result;
      }
