@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -39,7 +40,7 @@ public class PersonneService {
           return chiffreDaffaire;
      }
 
-     public double tauxLocationAnnuel(String nomProprietaire){
+     public double tauxLocationAnnuel(String nomProprietaire, int annee){
           Personne proprietaire = personneRepository.findByNom(nomProprietaire);
           if(proprietaire == null){
                return -1;
@@ -48,7 +49,15 @@ public class PersonneService {
           int jours = 0;
           for (Voiture voiture : voitures) {
                for(DureeLocation dureeLocation : voiture.getDureeLocations()) {
-                    jours += (int) Duration.between(dureeLocation.dateDebut(), dureeLocation.dateFin()).toDays();
+                   if(dureeLocation.dateDebut().getYear() == annee && dureeLocation.dateFin().getYear() == annee){
+                       jours += (int) Duration.between(dureeLocation.dateDebut(), dureeLocation.dateFin()).toDays();
+                   }
+                   else if (dureeLocation.dateDebut().getYear() == annee && dureeLocation.dateFin().getYear() != annee) {
+                       jours += (int) Duration.between(dureeLocation.dateDebut(), LocalDate.of(annee, 12, 31)).toDays();
+                   }
+                   else if (dureeLocation.dateDebut().getYear() != annee && dureeLocation.dateFin().getYear() == annee) {
+                       jours += (int) Duration.between(LocalDate.of(annee, 1, 1), dureeLocation.dateFin()).toDays();
+                   }
                }
           }
           return (double) ((jours / proprietaire.getVoituresPossedees().size()) * 100 / 365);

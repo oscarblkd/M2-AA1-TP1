@@ -65,11 +65,14 @@ public class PersonneController {
              @ApiResponse(responseCode = "404", description = "Propriétaire non trouvé"),
              @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
      })
-     @GetMapping("taux/{nom}")
+     @GetMapping("taux/{annee}/{nom}")
      public ResponseEntity<Double> getTauxLocationAnnuel(
+             @Parameter(description = "L'année du taux voulu", required = true)
+             @PathVariable int annee,
              @Parameter(description = "Le nom du propriétaire dont le taux veut être calculé", required = true)
-             @PathVariable String nom) {
-          double result = service.tauxLocationAnnuel(nom);
+             @PathVariable String nom)
+     {
+          double result = service.tauxLocationAnnuel(nom, annee);
           if(result == -1){
                return ResponseEntity.notFound().build();
           }
