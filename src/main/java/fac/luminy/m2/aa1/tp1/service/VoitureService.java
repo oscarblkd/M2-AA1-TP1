@@ -24,24 +24,9 @@ public class VoitureService {
     /**
      * Récupère la liste des voitures pour un propriétaire donné.
      *
-     * @param voitures Listes des voitures
-     * @return une liste de {@link VoitureDTO} représentant la conversion des voitures en VoitureDTO
-     */
-    private List<VoitureDTO> convertVoitureListToVoitureDTO(List<Voiture> voitures) {
-        List<VoitureDTO> dtos = new ArrayList<>();
-        for (Voiture voiture : voitures) {
-            dtos.add(new VoitureDTO(voiture));
-        }
-        return dtos;
-    }
-
-    /**
-     * Récupère la liste des voitures pour un propriétaire donné.
-     *
      * @param nomProprietaire le nom du propriétaire dont les voitures doivent être récupérées
      * @return une liste de {@link VoitureDTO} représentant les voitures du propriétaire
      */
-
     public List<VoitureDTO> recupererVoituresProprietaire(String nomProprietaire){
         log.info("Demande de recuperation des voitures pour le proprietaire avec le nom {}", nomProprietaire);
         List<VoitureDTO> listeRetour = new ArrayList<>();
@@ -65,22 +50,19 @@ public class VoitureService {
      * @param prix Prix de {@link Double} correspondant au prix voulu du locataire
      * @return une liste de {@link VoitureDTO}
      */
-    public List<VoitureDTO> filtrageVoitures(List<TypeVoiture> typesVoiture, double prix){
-        List<Voiture> listeRetour = new ArrayList<>();
-        if(typesVoiture == null) typesVoiture = new ArrayList<>();
-        if(!typesVoiture.isEmpty()){
-            listeRetour.addAll(voitureRepository.findVoituresByTypeIn(typesVoiture));
+    public List<VoitureDTO> filtrageVoitures(double prix,
+                                             List<TypeVoiture> typesVoiture){
+        if(typesVoiture.isEmpty()){
+            typesVoiture = List.of(TypeVoiture.values());
         }
-        if(prix > 0){
-            voitureRepository.findByPricePlusMinusTenPercent(prix).forEach(voiture -> {
-                if(!listeRetour.contains(voiture)){
-                    listeRetour.add(voiture);
-                }
+        List<Voiture> listeRepo = voitureRepository.findByPreferences(prix,typesVoiture);
+        List<VoitureDTO> listeRetour = new ArrayList<>();
+        if(listeRepo != null){
+            listeRepo.forEach(voiture -> {
+                listeRetour.add(new VoitureDTO(voiture));
             });
         }
-        if(listeRetour.isEmpty()){
-            listeRetour.addAll(voitureRepository.findAll());
-        }
-        return convertVoitureListToVoitureDTO(listeRetour);
+
+        return listeRetour;
     }
 }

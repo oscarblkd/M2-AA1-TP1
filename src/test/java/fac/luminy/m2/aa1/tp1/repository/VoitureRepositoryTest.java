@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,44 +61,38 @@ public class VoitureRepositoryTest {
     }
 
     @Test
-    public void testFindByPricePlusMinusTenPercent(){
+    public void testFindByPreferences(){
         Voiture v1 = new Voiture();
         v1.setPrix(8.9);
+        v1.setType(TypeVoiture.BERLINE);
         voitureRepository.save(v1);
 
         Voiture v2 = new Voiture();
         v2.setPrix(9.0);
+        v2.setType(TypeVoiture.SUV);
         voitureRepository.save(v2);
 
         Voiture v3 = new Voiture();
         v3.setPrix(10.0);
+        v3.setType(TypeVoiture.BERLINE);
         voitureRepository.save(v3);
 
         Voiture v4 = new Voiture();
         v4.setPrix(11.0);
+        v4.setType(TypeVoiture.SUV);
         voitureRepository.save(v4);
 
         Voiture v5 = new Voiture();
         v5.setPrix(11.1);
+        v5.setType(TypeVoiture.BERLINE);
         voitureRepository.save(v5);
 
-        List<Voiture> result = voitureRepository.findByPricePlusMinusTenPercent(10);
+        List<Voiture> result = voitureRepository.findByPreferences(10, List.of(TypeVoiture.SUV));
 
-        assertNotNull(result);
-        assertEquals(3, result.size());
-        assertEquals(v2.getPrix(), result.get(0).getPrix());
-        assertEquals(v3.getPrix(), result.get(1).getPrix());
-        assertEquals(v4.getPrix(), result.get(2).getPrix());
-    }
-
-    @Test
-    public void testFindVoituresByTypeIn(){
-
-        List<Voiture> result = voitureRepository.findVoituresByTypeIn(List.of(TypeVoiture.COMPACTE));
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals(102, result.get(0).getId());
-        assertEquals(105, result.get(1).getId());
-
+        assertEquals(v2.getPrix(), result.get(0).getPrix());
+        assertEquals(v4.getPrix(), result.get(1).getPrix());
     }
+
 }

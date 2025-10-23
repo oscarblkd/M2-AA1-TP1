@@ -26,7 +26,7 @@ public class ArchitectureTest {
      */
     @Test
     public void repositoriesShouldBeInRepositoryPackage() {
-        JavaClasses importedClasses = new ClassFileImporter().importPackages("fac.luminy.architecture.sample.project");
+        JavaClasses importedClasses = new ClassFileImporter().importPackages("fac.luminy.m2.aa1.tp1");
 
         ArchRule rule = ArchRuleDefinition.classes()
                 .that().haveSimpleNameEndingWith("Repository")

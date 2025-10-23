@@ -23,13 +23,12 @@ import java.util.List;
  * @author matmiche
  */
 @RestController
-@RequestMapping("voitures")
+@RequestMapping("voitures/")
 @Slf4j
 @AllArgsConstructor
 public class VoitureController {
 
     private VoitureService service;
-
 
     /**
      * Récupère la liste des voitures pour un propriétaire donné.
@@ -71,6 +70,6 @@ public class VoitureController {
             @Parameter(description = "Prix voulu par le locataire")
             @RequestParam(required = false) Double price
     ) {
-        return service.filtrageVoitures(types, price);
+        return service.filtrageVoitures(price, types);
     }
 }

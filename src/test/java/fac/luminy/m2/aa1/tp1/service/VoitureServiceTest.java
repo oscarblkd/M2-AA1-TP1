@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -109,16 +110,16 @@ public class VoitureServiceTest {
 
         List<TypeVoiture> types = List.of(TypeVoiture.SUV);
 
-        when(voitureRepository.findVoituresByTypeIn(types))
+        when(voitureRepository.findByPreferences(0, types))
                 .thenReturn(List.of(voiture1));
 
         // Act
-        List<VoitureDTO> result = voitureService.filtrageVoitures(types, -1);
+        List<VoitureDTO> result = voitureService.filtrageVoitures(0, types);
 
         // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(voiture1.getId(), result.get(0).getId());
+        assertEquals(voiture1.getId(), result.getFirst().getId());
     }
 
     @Test
@@ -136,17 +137,19 @@ public class VoitureServiceTest {
         voiture1.setCouleur("Red");
 
         double price = 80000.0;
+        // empty car dans le service, si la liste est empty, on la remplace par tous les types disponibles
+        List<TypeVoiture> empty = Arrays.asList(TypeVoiture.values());
 
-        when(voitureRepository.findByPricePlusMinusTenPercent(price))
+        when(voitureRepository.findByPreferences(price, empty))
                 .thenReturn(List.of(voiture1));
 
         // Act
-        List<VoitureDTO> result = voitureService.filtrageVoitures(List.of(), price);
+        List<VoitureDTO> result = voitureService.filtrageVoitures(price, List.of());
 
         // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(voiture1.getId(), result.get(0).getId());
+        assertEquals(voiture1.getId(), result.getFirst().getId());
     }
 
     @Test
@@ -174,10 +177,12 @@ public class VoitureServiceTest {
         voiture2.setConsommation(10.0);
         voiture2.setCouleur("Blue");
 
-        when(voitureRepository.findAll()).thenReturn(List.of(voiture1, voiture2));
+
+        when(voitureRepository.findByPreferences(0, Arrays.asList(TypeVoiture.values())))
+                .thenReturn(List.of(voiture1, voiture2));
 
         // Act
-        List<VoitureDTO> result = voitureService.filtrageVoitures(List.of(), -1);
+        List<VoitureDTO> result = voitureService.filtrageVoitures(0, List.of());
 
         // Assert
         assertNotNull(result);
@@ -201,22 +206,18 @@ public class VoitureServiceTest {
         voiture1.setCouleur("Red");
 
         List<TypeVoiture> types = List.of(TypeVoiture.SUV);
-
-        when(voitureRepository.findVoituresByTypeIn(types))
-                .thenReturn(List.of(voiture1));
-
         double price = 80000.0;
-
-        when(voitureRepository.findByPricePlusMinusTenPercent(price))
+        when(voitureRepository.findByPreferences(price, types))
                 .thenReturn(List.of(voiture1));
+
 
         // Act
-        List<VoitureDTO> result = voitureService.filtrageVoitures(types, price);
+        List<VoitureDTO> result = voitureService.filtrageVoitures(price, types);
 
         // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(voiture1.getId(), result.get(0).getId());
+        assertEquals(voiture1.getId(), result.getFirst().getId());
     }
 
 
